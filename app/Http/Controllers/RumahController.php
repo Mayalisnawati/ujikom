@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Rumah;
+use App\Models\Location;
 use Illuminate\Http\Request;
 
 class RumahController extends Controller
@@ -25,7 +26,8 @@ class RumahController extends Controller
      */
     public function create()
     {
-        return view('admin.rumah.create');
+        $locations = Location::all();
+        return view('admin.rumah.create', compact('locations'));
     }
 
     /**
@@ -37,12 +39,25 @@ class RumahController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|unique:rumahs',
+            'location_id'=> 'required',
+            'nama_rumah' => 'required',
+            'wa' => 'required',
+            'alamat' => 'required',
+            'spesifikasi' => 'required',
+            // 'status' => 'required',
+            'konfirmasi' => 'required',
+
         ]);
 
-        $rumah = new Rumah();
-        $rumah->name = $request->name;
-        $rumah->save();
+        $rumahs = new Rumah();
+        $rumahs->location_id = $request->location_id;
+        $rumahs->nama_rumah = $request->nama_rumah;
+        $rumahs->wa = $request->wa;
+        $rumahs->alamat = $request->alamat;
+        $rumahs->spesifikasi = $request->spesifikasi;
+        // $rumahs->status = $request->status;
+        $rumahs->konfirmasi = $request->konfirmasi;
+        $rumahs->save();
         return redirect()
             ->route('rumah.index')->with('success', 'Data has been added');
     }
@@ -53,10 +68,10 @@ class RumahController extends Controller
      * @param  \App\Models\Rumah  $rumah
      * @return \Illuminate\Http\Response
      */
-    public function show(Rumah $rumah)
+    public function show($id)
     {
-        $rumah = Rumah::findOrFail($id);
-        return view('admin.rumah.show', compact('rumahs'));
+        // $rumahs = Rumah::findOrFail($id);
+        // return view('admin.rumah.show', compact('rumahs'));
     }
 
     /**
@@ -65,10 +80,11 @@ class RumahController extends Controller
      * @param  \App\Models\Rumah  $rumah
      * @return \Illuminate\Http\Response
      */
-    public function edit(Rumah $rumah)
+    public function edit($id)
     {
-        $rumah = Rumah::findOrFail($id);
-        return view('admin.rumah.edit', compact('rumahs'));
+        $rumahs = Rumah::findOrFail($id);
+        $locations = Location::all();
+        return view('admin.rumah.edit', compact('rumahs','locations'));
     }
 
     /**
@@ -78,20 +94,28 @@ class RumahController extends Controller
      * @param  \App\Models\Rumah  $rumah
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Rumah $rumah)
+    public function update(Request $request, $id)
     {
+        $validated = $request->validate([
+            'location_id'=> 'required',
+            'nama_rumah' => 'required',
+            'wa' => 'required',
+            'alamat' => 'required',
+            'spesifikasi' => 'required',
+            // 'status' => 'required',
+            'konfirmasi' => 'required',
+        ]);
         $rumahs = Rumah::findOrFail($id);
-
-        if ($request->name != $rumahs->name) {
-            $rules['name'] = 'required';
-        }
-
-        $validasiData = $request->validate($rules);
-
-        $rumahs->name = $request->name;
+        $rumahs->location_id = $request->location_id;
+        $rumahs->nama_rumah = $request->nama_rumah;
+        $rumahs->wa = $request->wa;
+        $rumahs->alamat = $request->alamat;
+        $rumahs->spesifikasi = $request->spesifikasi;
+        // $rumahs->status = $request->status;
+        $rumahs->konfirmasi = $request->konfirmasi;
         $rumahs->save();
         return redirect()
-            ->route('rumah.index')->with('success', 'Data has been edited');
+            ->route('rumah.index')->with('success', 'Data has been added');
     }
 
     /**
@@ -100,9 +124,9 @@ class RumahController extends Controller
      * @param  \App\Models\Rumah  $rumah
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Rumah $rumah)
+    public function destroy($id)
     {
-        $locations = Rumah::findOrFail($id);
+        $rumahs = Rumah::findOrFail($id);
         $rumahs->delete();
         return redirect()
             ->route('rumah.index')->with('success', 'Data has been deleted');

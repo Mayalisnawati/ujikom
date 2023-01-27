@@ -17,8 +17,16 @@ use App\Http\Controllers\RumahController;
 Route::get('/', function () {
     return view('layouts.admin');
 });
-Route::resource('/location', LocationController::class);
-Route::resource('/rumah', RumahController::class);
+Route::prefix('admin')->middleware(['auth'])->group(function () {
+    Route::get('/home', function () {
+        return view('layouts.admin');
+    });
+    Route::resource('/location', LocationController::class);
+    Route::resource('/rumah', RumahController::class);
+
+});
+// Route::resource('/location', LocationController::class);
+// Route::resource('/rumah', RumahController::class);
 
 Auth::routes();
 
