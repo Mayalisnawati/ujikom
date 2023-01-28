@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Image;
+use App\Models\Rumah;
 use Illuminate\Http\Request;
 
 class ImageController extends Controller
@@ -14,7 +15,8 @@ class ImageController extends Controller
      */
     public function index()
     {
-        //
+        $images = Image::latest()->get();
+        return view('admin.image.index', compact('images'));
     }
 
     /**
@@ -24,7 +26,8 @@ class ImageController extends Controller
      */
     public function create()
     {
-        //
+        $rumahs = Rumah::all();
+        return view('admin.image.create', compact('rumahs'));
     }
 
     /**
@@ -35,7 +38,34 @@ class ImageController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'rumah_id' => 'required',
+            'gambar_rumah' => 'required',
+        ]);
+
+        $images = new Image();
+        $images->rumah_id = $request->rumah_id;
+        // $images->gambar_rumah = $request->gambar_rumah;
+        // if ($request->hasFile('gambar_rumah')) {
+        //     $image = $request->file('gambar_rumah');
+        //     $name = rand(1000, 9999) . $image->getClientOriginalName();
+        //     $image->move('images/image/', $name);
+        //     $images->gambar_rumah = $name;
+        // }
+        if ($request->hasfile('gambar_rumah')) {
+            foreach ($request->file('gambar_rumah') as $image) {
+                $name = rand(1000, 9999) . $image->getClientOriginalName();
+                $image->move('images/gambar_rumah/', $name);
+                $images = new Image();
+                $images->rumah_id = $request->rumah_id;
+                $images->gambar_rumah = 'images/gambar_rumah/' . $name;
+                $images->save();
+            }}
+        $images->save();
+        return redirect()
+            ->route('image.index')->with('succes','Data has been added');
+
+
     }
 
     /**

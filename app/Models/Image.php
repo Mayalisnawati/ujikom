@@ -15,6 +15,19 @@ class Image extends Model
 
     public function image()
     {
+    //     if ($this->gambar_rumah && file_exists(public_path('images/image/' . $this->gambar_rumah))) {
+    //         return asset('images/image/' . $this->gambar_rumah);
+    //     } else {
+    //         return asset('images/no_image.jpg');
+    //     }
+    // }
+    // public function deleteImage()
+    // {
+    //     if ($this->gambar_rumah && file_exists(public_path('images/image/' . $this->gambar_rumah))) {
+    //         return unlink(public_path('images/image' . $this->gambar_rumah));
+    //     }
+
+
         if ($this->gambar_rumah && file_exists(public_path($this->gambar_rumah))) {
             return asset($this->gambar_rumah);
         }
@@ -26,4 +39,6 @@ class Image extends Model
         return unlink(public_path($this->gambar_rumah));
         // }
     }
-}
+
+    }
+

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\RumahController;
+use App\Http\Controllers\ImageController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,6 +24,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     });
     Route::resource('/location', LocationController::class);
     Route::resource('/rumah', RumahController::class);
+    Route::resource('/image', ImageController::class);
 
 });
 // Route::resource('/location', LocationController::class);
