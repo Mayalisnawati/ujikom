@@ -85,9 +85,11 @@ class ImageController extends Controller
      * @param  \App\Models\Image  $image
      * @return \Illuminate\Http\Response
      */
-    public function edit(Image $image)
+    public function edit($id)
     {
-        //
+        $rumahs = Rumah::all();
+        $images = Image::findOrFail($id);
+        return view('admin.image.edit', compact('images','rumahs'));
     }
 
     /**
@@ -97,9 +99,27 @@ class ImageController extends Controller
      * @param  \App\Models\Image  $image
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Image $image)
+    public function update(Request $request, $id)
     {
-        //
+        $validated = $request->validate([
+            'rumah_id' => 'required',
+            'gambar_rumah' => 'required',
+
+        ]);
+        $images = Image::findOrFail($id);
+        $images->rumah_id = $request->rumah_id;
+        $images->gambar_rumah = $request->gambar_rumah;
+        if ($request->hasfile('gambar_rumah')) {
+            foreach ($request->file('gambar_rumah') as $image) {
+                $name = rand(1000, 9999) . $image->getClientOriginalName();
+                $image->move('images/gambar_rumah/', $name);
+                $images = new Image();
+                $images->rumah_id = $request->rumah_id;
+                $images->gambar_rumah = 'images/gambar_rumah/' . $name;
+            }}
+        $images->update();
+        return redirect()
+            ->route('image.index')->with('success', 'Data has been edited');
     }
 
     /**
@@ -110,6 +130,9 @@ class ImageController extends Controller
      */
     public function destroy(Image $image)
     {
-        //
+        $images = Image::findOrFail($id);
+        $images->delete();
+        return redirect()
+            ->route('image.index')->with('success', 'Data has been deleted');
     }
 }

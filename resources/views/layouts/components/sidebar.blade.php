@@ -14,7 +14,7 @@
             </a>
             <div class="collapse" id="ui-basic">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href="admin/location">Location</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="location">Location</a></li>
                     <li class="nav-item"> <a class="nav-link" href="rumah">Rumah</a></li>
                     <li class="nav-item"> <a class="nav-link" href="image">Image</a>
                     </li>

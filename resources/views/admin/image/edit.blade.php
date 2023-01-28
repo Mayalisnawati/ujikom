@@ -2,21 +2,22 @@
 
 @section('content')
     <div class="container-fluid">
-        <form action="{{ route('image.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('image.update', $images->id) }}" method="post" enctype="multipart/form-data">
             @csrf
+            @method('put')
             <div class="col-lg-12">
                 <div class="card mb-4 shadow-lg rounded card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h4 class="mb-0">Tambah Gambar</h4>
+                        <h4 class="mb-0">Silahkan Edit</h4>
                     </div>
                     <div class="card-body">
-                        <div class="form-group mb-3">
+                        <div class="mb-3">
                             <label class="form-label">Nama Rumah</label>
                             <select name="rumah_id" id="rumah"
                                 class="form-control @error('rumah_id') is-invalid @enderror">
                                 @foreach ($rumahs as $rumah)
                                     <option value="" hidden>Pilih rumah</option>
-                                    <option value="{{ $rumah->id }}">{{ $rumah->nama_rumah }}
+                                    <option value="{{ $rumah->id }}" {{ $images->rumah_id == $rumah->id ? "selected " : " "  }} >{{ $rumah->nama_rumah }}
                                     </option>
                                 @endforeach
                             </select>
@@ -43,10 +44,7 @@
                 </div>
                 <div class="d-flex float-end">
                     <a href="/admin/image" class="btn btn-danger me-3"> Kembali</a>
-                    <button type="reset" class="btn btn-secondary mx-3">
-                        <span class="indicator-label"> Reset </span>
-                    </button>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary mx-3">
                         <span class="indicator-label"> Kirim </span>
                     </button>
                 </div>

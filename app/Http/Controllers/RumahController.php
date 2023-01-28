@@ -70,8 +70,8 @@ class RumahController extends Controller
      */
     public function show($id)
     {
-        // $rumahs = Rumah::findOrFail($id);
-        // return view('admin.rumah.show', compact('rumahs'));
+        $rumahs = Rumah::findOrFail($id);
+        return view('admin.rumah.show', compact('rumahs'));
     }
 
     /**
@@ -115,7 +115,7 @@ class RumahController extends Controller
         $rumahs->konfirmasi = $request->konfirmasi;
         $rumahs->save();
         return redirect()
-            ->route('rumah.index')->with('success', 'Data has been added');
+            ->route('rumah.index')->with('success', 'Data has been edited');
     }
 
     /**
