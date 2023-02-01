@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Rumah;
 use App\Models\Location;
+use App\Models\Image;
 use Illuminate\Http\Request;
 
 class RumahController extends Controller
@@ -38,29 +39,71 @@ class RumahController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'location_id'=> 'required',
-            'nama_rumah' => 'required',
-            'wa' => 'required',
-            'alamat' => 'required',
-            'spesifikasi' => 'required',
-            // 'status' => 'required',
-            'konfirmasi' => 'required',
+            $validated = $request->validate([
+                'location_id'=> 'required',
+                'nama_rumah' => 'required',
+                'wa' => 'required',
+                'alamat' => 'required',
+                'spesifikasi' => 'required',
+                'konfirmasi' => 'required',
+            ]);
 
-        ]);
+            $rumahs = new Rumah();
+            $rumahs->location_id = $request->location_id;
+            $rumahs->nama_rumah = $request->nama_rumah;
+            $rumahs->wa = $request->wa;
+            $rumahs->alamat = $request->alamat;
+            $rumahs->spesifikasi = $request->spesifikasi;
+            $rumahs->konfirmasi = $request->konfirmasi;
+            $rumahs->save();
 
-        $rumahs = new Rumah();
-        $rumahs->location_id = $request->location_id;
-        $rumahs->nama_rumah = $request->nama_rumah;
-        $rumahs->wa = $request->wa;
-        $rumahs->alamat = $request->alamat;
-        $rumahs->spesifikasi = $request->spesifikasi;
-        // $rumahs->status = $request->status;
-        $rumahs->konfirmasi = $request->konfirmasi;
-        $rumahs->save();
-        return redirect()
-            ->route('rumah.index')->with('success', 'Data has been added');
+            if ($request->hasfile('gambar_rumah')) {
+                foreach ($request->file('gambar_rumah') as $image) {
+                    $name = rand(1000, 9999) . $image->getClientOriginalName();
+                    $image->move('images/gambar_rumah/', $name);
+                    $images = new Image();
+                    $images->rumah_id = $rumahs->id;
+                    $images->gambar_rumah = 'images/gambar_rumah/' . $name;
+                    $images->save();
+                }
+            }
+
+            return redirect()
+                ->route('rumah.index')->with('success', 'Data has been added');
+
+
     }
+//         $validated = $request->validate([
+//             'location_id'=> 'required',
+//             'nama_rumah' => 'required',
+//             'wa' => 'required',
+//             'alamat' => 'required',
+//             'spesifikasi' => 'required',
+//             'konfirmasi' => 'required',
+
+//         ]);
+
+//         $rumahs = new Rumah();
+//         $rumahs->location_id = $request->location_id;
+//         $rumahs->nama_rumah = $request->nama_rumah;
+//         $rumahs->wa = $request->wa;
+//         $rumahs->alamat = $request->alamat;
+//         $rumahs->spesifikasi = $request->spesifikasi;
+//         $rumahs->konfirmasi = $request->konfirmasi;
+//         $rumahs->save();
+//         if ($request->hasfile('gambar_rumah')) {
+//             foreach ($request->file('gambar_rumah') as $image) {
+//                 $name = rand(1000, 9999) . $image->getClientOriginalName();
+//                 $image->move('images/gambar_rumah/', $name);
+//                 $images = new Image();
+//                 $images->rumah_id = $rumahs->id;
+//                 $images->gambar_rumah = 'images/gambar_rumah/' . $name;
+//                 $images->save();
+//             }
+//         }
+//         return redirect()
+//         ->route('rumah.index')->with('success', 'Data has been added');
+// }
 
     /**
      * Display the specified resource.
@@ -71,7 +114,8 @@ class RumahController extends Controller
     public function show($id)
     {
         $rumahs = Rumah::findOrFail($id);
-        return view('admin.rumah.show', compact('rumahs'));
+        $images = Image::where('rumah_id', $id)->get();
+        return view('admin.rumah.show', compact('rumahs','images'));
     }
 
     /**
@@ -84,7 +128,8 @@ class RumahController extends Controller
     {
         $rumahs = Rumah::findOrFail($id);
         $locations = Location::all();
-        return view('admin.rumah.edit', compact('rumahs','locations'));
+        $images = Image::where('rumah_id', $id)->get();
+        return view('admin.rumah.edit', compact('rumahs','locations','images'));
     }
 
     /**
@@ -127,6 +172,11 @@ class RumahController extends Controller
     public function destroy($id)
     {
         $rumahs = Rumah::findOrFail($id);
+        $images = Image::where('rumah_id', $id)->get();
+        foreach ($images as $image) {
+            $image->deleteImage();
+            $image->delete();
+        }
         $rumahs->delete();
         return redirect()
             ->route('rumah.index')->with('success', 'Data has been deleted');

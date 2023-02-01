@@ -15,8 +15,8 @@ class ImageController extends Controller
      */
     public function index()
     {
-        $images = Image::latest()->get();
-        return view('admin.image.index', compact('images'));
+        // $images = Image::latest()->get();
+        // return view('admin.image.index', compact('images'));
     }
 
     /**
@@ -26,8 +26,8 @@ class ImageController extends Controller
      */
     public function create()
     {
-        $rumahs = Rumah::all();
-        return view('admin.image.create', compact('rumahs'));
+        // $rumahs = Rumah::all();
+        // return view('admin.image.create', compact('rumahs'));
     }
 
     /**
@@ -39,19 +39,9 @@ class ImageController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'rumah_id' => 'required',
             'gambar_rumah' => 'required',
         ]);
 
-        $images = new Image();
-        $images->rumah_id = $request->rumah_id;
-        // $images->gambar_rumah = $request->gambar_rumah;
-        // if ($request->hasFile('gambar_rumah')) {
-        //     $image = $request->file('gambar_rumah');
-        //     $name = rand(1000, 9999) . $image->getClientOriginalName();
-        //     $image->move('images/image/', $name);
-        //     $images->gambar_rumah = $name;
-        // }
         if ($request->hasfile('gambar_rumah')) {
             foreach ($request->file('gambar_rumah') as $image) {
                 $name = rand(1000, 9999) . $image->getClientOriginalName();
@@ -60,11 +50,9 @@ class ImageController extends Controller
                 $images->rumah_id = $request->rumah_id;
                 $images->gambar_rumah = 'images/gambar_rumah/' . $name;
                 $images->save();
-            }}
-        $images->save();
-        return redirect()
-            ->route('image.index')->with('succes','Data has been added');
-
+            }
+            return back()->with('success', 'Data has been added');
+        }
 
     }
 
@@ -87,9 +75,9 @@ class ImageController extends Controller
      */
     public function edit($id)
     {
-        $rumahs = Rumah::all();
-        $images = Image::findOrFail($id);
-        return view('admin.image.edit', compact('images','rumahs'));
+        // $rumahs = Rumah::all();
+        // $images = Image::findOrFail($id);
+        // return view('admin.image.edit', compact('images','rumahs'));
     }
 
     /**
@@ -99,27 +87,9 @@ class ImageController extends Controller
      * @param  \App\Models\Image  $image
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        $validated = $request->validate([
-            'rumah_id' => 'required',
-            'gambar_rumah' => 'required',
 
-        ]);
-        $images = Image::findOrFail($id);
-        $images->rumah_id = $request->rumah_id;
-        $images->gambar_rumah = $request->gambar_rumah;
-        if ($request->hasfile('gambar_rumah')) {
-            foreach ($request->file('gambar_rumah') as $image) {
-                $name = rand(1000, 9999) . $image->getClientOriginalName();
-                $image->move('images/gambar_rumah/', $name);
-                $images = new Image();
-                $images->rumah_id = $request->rumah_id;
-                $images->gambar_rumah = 'images/gambar_rumah/' . $name;
-            }}
-        $images->update();
-        return redirect()
-            ->route('image.index')->with('success', 'Data has been edited');
     }
 
     /**
@@ -128,11 +98,12 @@ class ImageController extends Controller
      * @param  \App\Models\Image  $image
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Image $image)
+    public function destroy($id)
     {
         $images = Image::findOrFail($id);
+        $images->deleteImage();
         $images->delete();
-        return redirect()
-            ->route('image.index')->with('success', 'Data has been deleted');
+
+        return back()->with('success', 'Data has been deleted');
     }
 }

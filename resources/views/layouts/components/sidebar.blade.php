@@ -16,12 +16,11 @@
                 <ul class="nav flex-column sub-menu">
                     <li class="nav-item"> <a class="nav-link" href="location">Location</a></li>
                     <li class="nav-item"> <a class="nav-link" href="rumah">Rumah</a></li>
-                    <li class="nav-item"> <a class="nav-link" href="image">Image</a>
-                    </li>
-                </ul>
-            </div>
         </li>
-        {{-- <li class="nav-item">
+    </ul>
+    </div>
+    </li>
+    {{-- <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#form-elements" aria-expanded="false"
                 aria-controls="form-elements">
                 <i class="icon-columns menu-icon"></i>

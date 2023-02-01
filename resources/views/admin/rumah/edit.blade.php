@@ -99,5 +99,59 @@
                 </div>
             </div>
         </form>
+        <div class="col-md-6">
+            <div class="card shadow-lg mb-4">
+                <div class="card-header">
+                    <strong class="card-title">Gambar Produk</strong>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('image.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" name="rumah_id" value="{{ $rumahs->id }}">
+                        <div class="mb-3">
+                            <label class="form-label">gambar rumah</label>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input @error('gambar_rumah') is-invalid @enderror"
+                                    name="gambar_rumah[]" value="{{ old('gambar_rumah') }}" multiple>
+                                <label class="custom-file-label" for="customFile">Choose file</label>
+                                @error('gambar_rumah')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <button type="submit" class="mb-3 btn btn-primary">
+                            Kirim
+                        </button>
+                    </form>
+                    <div class="row mb-3">
+                        @foreach ($images as $img)
+                            <div class="col-md-6 mb-3 col-lg-6">
+                                <div class="card-group">
+                                    <div class="card shadow">
+                                        <img src="{{ asset($img->gambar_rumah) }}" class="card-img-top" alt="...">
+                                        <div class="card-body">
+                                            <form action="{{ Route('image.destroy', $img->id) }}" method="POST">
+                                                @csrf
+                                                @method('delete')
+                                                <button type="submit" class="btn btn-sm btn-danger"><svg
+                                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                        fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                                        <path
+                                                            d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
+                                                    </svg>
+                                                </button>
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
