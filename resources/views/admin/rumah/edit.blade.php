@@ -11,11 +11,12 @@
                         <h4 class="mb-0">Tambah Kategori</h4>
                     </div>
                     <div class="card-body">
-                        <div class="mb-3">
-                            <label class="form-label">Alamat</label>
-                            <select name="location_id" class="form-select @error('location_id') is-invalid @enderror">
+                       <div class="form-group mb-3">
+                            <label class="form-label">Pilih WIlayah</label>
+                            <select name="location_id" id="kategori"
+                                class="form-control @error('location_id') is-invalid @enderror">
                                 @foreach ($locations as $location)
-                                    <option value="" hidden>Pilih Alamat</option>
+                                    <option value="" hidden>Pilih Kategori</option>
                                     <option value="{{ $location->id }}">{{ $location->name }}
                                     </option>
                                 @endforeach
