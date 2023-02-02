@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\RumahController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\FrontController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,7 +17,7 @@ use App\Http\Controllers\ImageController;
 */
 
 Route::get('/', function () {
-    return view('layouts.admin');
+    return view('welcome');
 });
 Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('/home', function () {
@@ -31,5 +32,5 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 // Route::resource('/rumah', RumahController::class);
 
 Auth::routes();
-
+Route::get('/rumah', [FrontController::class, 'rumahuser']);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
