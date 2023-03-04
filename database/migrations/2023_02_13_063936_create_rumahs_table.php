@@ -6,8 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
+    /**     * Run the migrations.
      *
      * @return void
      */
@@ -15,14 +14,20 @@ return new class extends Migration
     {
         Schema::create('rumahs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('location_id');
-            $table->foreign('location_id')->references('id')->on('locations')->onDelete('cascade');
+            $table->unsignedBigInteger('id_kota');
+            $table->foreign('id_kota')->references('id')->on('kotas')->onDelete('cascade');
+            $table->unsignedBigInteger('kecamatan_id');
+            $table->foreign('kecamatan_id')->references('id')->on('kecamatans')->onDelete('cascade');
+            $table->unsignedBigInteger('kelurahan_id');
+            $table->foreign('kelurahan_id')->references('id')->on('kelurahans')->onDelete('cascade');
+            $table->text('alamat');
             $table->string('nama_rumah');
             $table->string('wa');
-            $table->text('alamat');
+            $table->integer('harga');
             $table->text('spesifikasi');
             $table->enum('status', ['sale', 'soldout'])->default('sale');
-            $table->string('konfirmasi');
+            $table->enum('konfirmasi', ['ya', 'tidak'])->default('ya');
+
             $table->timestamps();
         });
     }

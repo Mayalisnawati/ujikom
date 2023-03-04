@@ -34,7 +34,7 @@
                         <div class="col-md-4">
                             <input type="text" class="form-control border-0 py-3" placeholder="Search Keyword">
                         </div>
-                        <div class="col-md-4">
+                        {{-- <div class="col-md-4">
                             <select class="form-select border-0 py-3">
                                 <option selected>Property Type</option>
                                 <option value="1">Property Type 1</option>
@@ -49,7 +49,7 @@
                                 <option value="2">Location 2</option>
                                 <option value="3">Location 3</option>
                             </select>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
                 <div class="col-md-2">
@@ -212,8 +212,9 @@
                             <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                                 <div class="property-item rounded overflow-hidden">
                                     <div class="position-relative overflow-hidden">
-                                        <a href=""><img class="img-fluid" src="{{ $images->firstWhere(fn($image) => $image->rumah_id === $rumah->id)->gambar_rumah }}"
-                                                alt=""></a>
+                                        <a href=""><img class="img-fluid"
+                                                src="{{ $images->firstWhere(fn($image) => $image->rumah_id === $rumah->id)->gambar_rumah }}"
+                                                alt="" width="100" height="100"></a>
                                         <div
                                             class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">
                                             {{ $rumah->status }}</div>

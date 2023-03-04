@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Rumah;
+use App\Models\Kota;
+use App\Models\Kecamatan;
+use App\Models\Kelurahan;
 use App\Models\Location;
 use App\Models\Image;
 use Illuminate\Http\Request;
@@ -16,7 +19,10 @@ class RumahController extends Controller
      */
     public function index()
     {
-        $rumahs = Rumah::latest()->get();
+        $rumahs = Rumah::with('kota','kecamatan','kelurahan')->latest()->get();
+        // $kota = Kota::all();
+        // $kecamatan = Kecamatan::all();
+        // dd($rumahs);
         return view('admin.rumah.index', compact('rumahs'));
     }
 
@@ -27,8 +33,10 @@ class RumahController extends Controller
      */
     public function create()
     {
-        $locations = Location::all();
-        return view('admin.rumah.create', compact('locations'));
+        $kelurahans = Kelurahan::all();
+        $kota = Kota::all();
+        $kecamatan = Kecamatan::all();
+        return view('admin.rumah.create', compact('kota','kecamatan','kelurahans'));
     }
 
     /**
@@ -40,21 +48,28 @@ class RumahController extends Controller
     public function store(Request $request)
     {
             $validated = $request->validate([
-                'location_id'=> 'required',
+                // 'location_id'=> 'required',
                 'nama_rumah' => 'required',
+                'kecamatan_id' => 'required',
+                'kelurahan_id' => 'required',
+                'id_kota' => 'required',
                 'wa' => 'required',
                 'alamat' => 'required',
                 'spesifikasi' => 'required',
-                'konfirmasi' => 'required',
+                // 'konfirmasi' => 'required',
+                'harga' => 'required',
             ]);
 
             $rumahs = new Rumah();
-            $rumahs->location_id = $request->location_id;
+            // $rumahs->location_id = $request->location_id;
             $rumahs->nama_rumah = $request->nama_rumah;
+            $rumahs->kecamatan_id = $request->kecamatan_id;
+            $rumahs->id_kota = $request->id_kota;
+            $rumahs->kelurahan_id = $request->kelurahan_id;
             $rumahs->wa = $request->wa;
             $rumahs->alamat = $request->alamat;
             $rumahs->spesifikasi = $request->spesifikasi;
-            $rumahs->konfirmasi = $request->konfirmasi;
+            $rumahs->harga = $request->harga;
             $rumahs->save();
 
             if ($request->hasfile('gambar_rumah')) {
@@ -127,9 +142,9 @@ class RumahController extends Controller
     public function edit($id)
     {
         $rumahs = Rumah::findOrFail($id);
-        $locations = Location::all();
+        $kota = Kota::all();
         $images = Image::where('rumah_id', $id)->get();
-        return view('admin.rumah.edit', compact('rumahs','locations','images'));
+        return view('admin.rumah.edit', compact('rumahs','kota','images'));
     }
 
     /**
@@ -142,22 +157,27 @@ class RumahController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'location_id'=> 'required',
             'nama_rumah' => 'required',
+            'id_kota' => 'required',
+            'kecamatan_id' => 'required',
+            'kelurahan_id' => 'required',
             'wa' => 'required',
             'alamat' => 'required',
             'spesifikasi' => 'required',
             // 'status' => 'required',
-            'konfirmasi' => 'required',
+
+            'harga' => 'required',
         ]);
         $rumahs = Rumah::findOrFail($id);
-        $rumahs->location_id = $request->location_id;
         $rumahs->nama_rumah = $request->nama_rumah;
+        $rumahs->id_kota = $request->id_kota;
+        $rumahs->kecamatan_id = $request->kecamatan_id;
+        $rumahs->kelurahan_id = $request->kelurahan_id;
         $rumahs->wa = $request->wa;
         $rumahs->alamat = $request->alamat;
         $rumahs->spesifikasi = $request->spesifikasi;
         // $rumahs->status = $request->status;
-        $rumahs->konfirmasi = $request->konfirmasi;
+        $rumahs->harga = $request->harga;
         $rumahs->save();
         return redirect()
             ->route('rumah.index')->with('success', 'Data has been edited');
@@ -180,5 +200,17 @@ class RumahController extends Controller
         $rumahs->delete();
         return redirect()
             ->route('rumah.index')->with('success', 'Data has been deleted');
+    }
+
+    // subKota
+    public function getKecamatan($id)
+    {
+        $sub_kategoris = Kecamatan::where('id_kota', $id)->get();
+        return response()->json($sub_kategoris);
+    }
+    public function getKelurahan($id)
+    {
+        $sub_kategori = Kelurahan::where('kecamatan_id', $id)->get();
+        return response()->json($sub_kategori);
     }
 }

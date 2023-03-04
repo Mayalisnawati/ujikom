@@ -79,6 +79,12 @@
                                 </tr>
                                 <tr>
                                     <td>
+                                        <strong>Harga</strong>
+                                    </td>
+                                    <td>{{ $rumahs->harga }}</td>
+                                </tr>
+                                <tr>
+                                    <td>
                                         <strong>Nomor</strong>
                                     </td>
                                     <td>{{ $rumahs->wa }}</td>

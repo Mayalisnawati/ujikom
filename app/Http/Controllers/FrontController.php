@@ -16,4 +16,20 @@ class FrontController extends Controller
         $locations = Location::all();
         return view('user.fitur.rumah', compact('rumahs','images','locations'));
     }
+    public function frontend(Request $request)
+    {
+        // $pro = $request->all();
+        $rumahs = Rumah::all();
+        $images = Image::all();
+        // $locations = Location::all();
+        return view('frontend.user', compact('rumahs','images'));
+    }
+    public function detail(Rumah $rumahs,Request $request)
+    {
+        // $pro = $request->all();
+        $rumahs = Rumah::all();
+        $images = Image::all();
+        // $locations = Location::all();
+        return view('frontend.detail', compact('rumahs','images'));
+    }
 }

@@ -10,7 +10,7 @@
                         <h4 class="mb-0">Tambah Rumah</h4>
                     </div>
                     <div class="card-body">
-                        <div class="form-group mb-3">
+                        {{-- <div class="form-group mb-3">
                             <label class="form-label">Pilih WIlayah</label>
                             <select name="location_id" id="kategori"
                                 class="form-control @error('location_id') is-invalid @enderror">
@@ -25,9 +25,9 @@
                                     <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
-                        </div>
+                        </div> --}}
                         <div class="mb-3">
-                            <label class="form-label">Nama Rumah</label>
+                            <label class="form-label">Type Rumah</label>
                             <input type="text" name="nama_rumah"
                                 class="form-control mb-2  @error('nama_rumah') is-invalid @enderror"
                                 placeholder="Nama Rumah" value="">
@@ -38,21 +38,76 @@
                             @enderror
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">WhatsApp</label>
-                            <input type="number" name="wa"
-                                class="form-control mb-2  @error('wa') is-invalid @enderror" placeholder="WhatsApp"
+                            <label class="form-label">Harga</label>
+                            <input type="number" name="harga"
+                                class="form-control mb-2  @error('harga') is-invalid @enderror" placeholder="Harga Rumah"
                                 value="">
-                            @error('wa')
+                            @error('harga')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
                         </div>
                         <div class="form-group mb-3">
+                            <label class="form-label">Kabupaten</label>
+                            <select name="id_kota" id="kota"
+                                class="form-control @error('id_kota') is-invalid @enderror">
+                                @foreach ($kota as $data)
+                                    <option hidden>Pilih Kabupaten / Kota</option>
+                                    <option value="{{ $data->id }}">{{ $data->nama_kabupaten }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('id_kota')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label class="form-label">Kecamatan</label>
+                                <select name="kecamatan_id" id="kecamatan"
+                                    class="form-control @error('kecamatan_id') is-invalid @enderror">
+                                    <option value="" hidden>Pilih Kota Terlebih dulu</option>
+                                </select>
+                                @error('kecamatan_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label class="form-label">Kelurahan</label>
+                                <select name="kelurahan_id" id="kelurahan"
+                                    class="form-control @error('kelurahan_id') is-invalid @enderror">
+                                    <option value="" hidden>Pilih Kecamatan Terlebih dulu</option>
+                                </select>
+                                @error('kelurahan_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
                             <label for="example-palaceholder">Alamat Rumah</label>
                             <textarea name="alamat" cols="20" rows="3" class="form-control  @error('alamat') is-invalid @enderror"
                                 placeholder="alamat" value="{{ old('alamat') }}"></textarea>
                             @error('alamat')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">No Telephone</label>
+                            <input type="number" name="wa"
+                                class="form-control mb-2  @error('wa') is-invalid @enderror" placeholder="WhatsApp"
+                                value="">
+                            @error('wa')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -80,7 +135,7 @@
                                 </span>
                             @enderror
                         </div> --}}
-                        <div class="mb-3">
+                        {{-- <div class="mb-3">
                             <label class="form-label">Konfirmasi</label>
                             <input type="text" name="konfirmasi"
                                 class="form-control mb-2  @error('konfirmasi') is-invalid @enderror"
@@ -90,7 +145,7 @@
                                     <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
-                        </div>
+                        </div> --}}
                         <div class="mb-3">
                             <label class="form-label">gambar produk</label>
                             <br>
@@ -118,4 +173,76 @@
             </div>
         </form>
     </div>
+@endsection
+@section('scripts')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function() {
+            $('#kota').on('change', function() {
+                var kota_id = $(this).val();
+                if (kota_id) {
+                    $.ajax({
+                        url: '/admin/getKecamatan/' + kota_id,
+                        type: "GET",
+                        data: {
+                            "_token": "{{ csrf_token() }}"
+                        },
+                        dataType: "json",
+                        success: function(data) {
+                            if (data) {
+                                $('#kecamatan').empty();
+                                $('#kecamatan').append(
+                                    '<option hidden>Pilih Kecamatan</option>');
+                                $.each(data, function(key, kecamatans) {
+                                    $('select[name="kecamatan_id"]').append(
+                                        '<option value="' + kecamatans.id + '">' +
+                                        kecamatans.nama_kecamatan + '</option>');
+                                });
+                            } else {
+                                $('#kecamatan').empty();
+                            }
+                        }
+                    });
+                } else {
+                    $('#kecamatan').empty();
+                }
+            });
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function() {
+            $('#kecamatan').on('change', function() {
+                var kecamatan_id = $(this).val();
+                if (kecamatan_id) {
+                    $.ajax({
+                        url: '/admin/getKelurahan/' + kecamatan_id,
+                        type: "GET",
+                        data: {
+                            "_token": "{{ csrf_token() }}"
+                        },
+                        dataType: "json",
+                        success: function(data) {
+                            if (data) {
+                                $('#kelurahan').empty();
+                                $('#kelurahan').append(
+                                    '<option hidden>Pilih Kelurahan</option>');
+                                $.each(data, function(key, kelurahans) {
+                                    $('select[name="kelurahan_id"]').append(
+                                        '<option value="' + kelurahans.id + '">' +
+                                        kelurahans.nama_kelurahan + '</option>');
+                                });
+                            } else {
+                                $('#kelurahan').empty();
+                            }
+                        }
+                    });
+                } else {
+                    $('#kelurahan').empty();
+                }
+            });
+        });
+    </script>
 @endsection

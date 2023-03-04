@@ -12,7 +12,11 @@
                         <tr>
                             <th>No</th>
                             <th>Type</th>
-                            <th>Whatsapp</th>
+                            <th>Harga</th>
+                            <th>Nama Kabupaten</th>
+                            <th>Nama Kecamatan</th>
+                            <th>Nama Kelurahan</th>
+                            <th>No Telephone</th>
                             <th>Alamat</th>
                             <th>Spesifikasi</th>
                             <th>Status</th>
@@ -35,6 +39,27 @@
                                     </td>
                                     <td>
                                         <div class="d-flex">
+                                            {{ $rumah->harga }}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex">
+                                            {{ $rumah->kota->nama_kabupaten }}
+
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex">
+                                            {{ $rumah->kecamatan->nama_kecamatan }}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex">
+                                            {{ $rumah->kelurahan->nama_kelurahan }}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex">
                                             {{ $rumah->wa }}
                                         </div>
                                     </td>
@@ -53,11 +78,11 @@
                                             {{ $rumah->status }}
                                         </div>
                                     </td>
-                                    <td>
+                                    {{-- <td>
                                         <div class="d-flex">
                                             {{ $rumah->konfirmasi }}
                                         </div>
-                                    </td>
+                                    </td> --}}
 
                                     <td>
                                         <form action="{{ route('rumah.destroy', $rumah->id) }}" method="post">

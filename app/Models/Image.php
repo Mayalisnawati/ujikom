@@ -32,7 +32,7 @@ class Image extends Model
             return asset($this->gambar_rumah);
         }
     }
-
+        
     public function deleteImage()
     {
         // if ($this->gambar_rumah && file_exists(public_path($this->gambar_rumah))) {

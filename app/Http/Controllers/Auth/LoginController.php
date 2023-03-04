@@ -31,7 +31,7 @@ class LoginController extends Controller
     protected function authenticated()
     {
         if (Auth::user()) {
-            return redirect('/home');
+            return redirect('/admin/home');
         } else {
             return redirect('/home');
         }
